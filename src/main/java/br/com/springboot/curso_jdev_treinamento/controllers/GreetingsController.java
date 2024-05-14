@@ -57,6 +57,7 @@ public class GreetingsController {
 	@GetMapping(value = "listall") // URL
 	@ResponseBody /* Retorna os dados par ao corpo da resposta */
 	public ResponseEntity<List<Usuario>> userList() {
+		
 		List<Usuario> user = usuarioRepository.findAll(); /* executa a consulta no banco de dados */
 
 		return new ResponseEntity<List<Usuario>>(user, HttpStatus.OK); /* Retorna a lista em JSON */
@@ -65,6 +66,7 @@ public class GreetingsController {
 	@PostMapping(value = "save") // URL
 	@ResponseBody /* Descricao da resposta */
 	public ResponseEntity<Usuario> save(@RequestBody Usuario usuario) { /* Recebe os dados para salvar */
+		
 		Usuario user = usuarioRepository.save(usuario);
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
@@ -73,6 +75,7 @@ public class GreetingsController {
 	@DeleteMapping(value = "delete") // URL
 	@ResponseBody /* Descricao da resposta */
 	public ResponseEntity<String> delete(@RequestParam Long iduser) { /* Recebe os dados para delete */
+		
 		usuarioRepository.deleteById(iduser);
 
 		return new ResponseEntity<String>("User deleted", HttpStatus.OK);
@@ -81,10 +84,11 @@ public class GreetingsController {
 	@PutMapping(value = "update") // URL
 	@ResponseBody /* Descricao da resposta */
 	public ResponseEntity<?> atualizar(@RequestBody Usuario usuario) { /* Recebe os dados para salvar */
+		
 		if (usuario.getId() == null) {
 			return new ResponseEntity<String>("ID was not provided for update", HttpStatus.OK);
 		}
-		
+
 		Usuario user = usuarioRepository.saveAndFlush(usuario);
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
@@ -93,8 +97,18 @@ public class GreetingsController {
 	@GetMapping(value = "finduserid") // URL
 	@ResponseBody /* Descricao da resposta */
 	public ResponseEntity<Usuario> findUser(@RequestParam(name = "iduser") Long iduser) { /* Recebe os dados para consultar */
+		
 		Usuario user = usuarioRepository.findById(iduser).get();
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "findbyname") // URL
+	@ResponseBody /* Descricao da resposta */
+	public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam(name = "name") String name) { /* Recebe os dados para consultar */
+
+		List<Usuario> usuario = usuarioRepository.buscarPorNome(name.trim().toUpperCase());
+
+		return new ResponseEntity<List<Usuario>>(usuario, HttpStatus.OK);
 	}
 }
