@@ -89,6 +89,7 @@ public class GreetingsController {
 			return new ResponseEntity<String>("ID was not provided for update", HttpStatus.OK);
 		}
 
+
 		Usuario user = usuarioRepository.saveAndFlush(usuario);
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
