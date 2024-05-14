@@ -84,7 +84,7 @@ public class GreetingsController {
 		if (usuario.getId() == null) {
 			return new ResponseEntity<String>("ID was not provided for update", HttpStatus.OK);
 		}
-		
+
 		Usuario user = usuarioRepository.saveAndFlush(usuario);
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
@@ -96,5 +96,15 @@ public class GreetingsController {
 		Usuario user = usuarioRepository.findById(iduser).get();
 
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "findbyname") // URL
+	@ResponseBody /* Descricao da resposta */
+	public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam(name = "name") String name) { /* Recebe os dados para consultar */
+
+		List<Usuario> usuario = usuarioRepository.buscarPorNome(name.trim().toUpperCase());
+
+		return new ResponseEntity<List<Usuario>>(usuario, HttpStatus.OK);
+
 	}
 }
