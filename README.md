@@ -7,5 +7,6 @@ Java CRUD Rest API using Spring Boot
     <img src="https://skillicons.dev/icons?i=java" />
     <img src="https://skillicons.dev/icons?i=spring" />
     <img src="https://skillicons.dev/icons?i=postgres" />
+    <img src="https://skillicons.dev/icons?i=bootstrap" />
   </a>
 </p>
