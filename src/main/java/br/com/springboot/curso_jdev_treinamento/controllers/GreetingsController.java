@@ -36,23 +36,6 @@ public class GreetingsController {
 	 * @param name the name to greet
 	 * @return greeting text
 	 */
-	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public String greetingText(@PathVariable String name) {
-		return "Hello " + name + "!";
-	}
-
-	@RequestMapping(value = "/olamundo/{nome}", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public String retornaOlaMundo(@PathVariable String name) {
-
-		Usuario usuario = new Usuario();
-		usuario.setName(name);
-
-		usuarioRepository.save(usuario);/* grava no banco de dados */
-
-		return "Ola mundo " + name;
-	}
 
 	@GetMapping(value = "listall") // URL
 	@ResponseBody /* Retorna os dados par ao corpo da resposta */
@@ -95,9 +78,9 @@ public class GreetingsController {
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "finduserid") // URL
+	@GetMapping(value = "findbyid") // URL
 	@ResponseBody /* Descricao da resposta */
-	public ResponseEntity<Usuario> findUser(@RequestParam(name = "iduser") Long iduser) { /* Recebe os dados para consultar */
+	public ResponseEntity<Usuario> findById(@RequestParam(name = "iduser") Long iduser) { /* Recebe os dados para consultar */
 		
 		Usuario user = usuarioRepository.findById(iduser).get();
 
@@ -106,9 +89,9 @@ public class GreetingsController {
 
 	@GetMapping(value = "findbyname") // URL
 	@ResponseBody /* Descricao da resposta */
-	public ResponseEntity<List<Usuario>> buscarPorNome(@RequestParam(name = "name") String name) { /* Recebe os dados para consultar */
+	public ResponseEntity<List<Usuario>> findByName(@RequestParam(name = "name") String name) { /* Recebe os dados para consultar */
 
-		List<Usuario> usuario = usuarioRepository.buscarPorNome(name.trim().toUpperCase());
+		List<Usuario> usuario = usuarioRepository.findByName(name.trim().toUpperCase());
 
 		return new ResponseEntity<List<Usuario>>(usuario, HttpStatus.OK);
 	}
