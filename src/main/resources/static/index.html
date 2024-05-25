@@ -51,6 +51,8 @@
 			<div align="center">
 				<button type="button" class="btn btn-primary btn-lg"
 					onclick="saveUser()">Sign up</button>
+				<button type="button" class="btn btn-warning btn-lg"
+					onclick="document.getElementById('formCreateUser').reset();">Clear</button>
 				<button type="button" class="btn btn-secondary btn-lg">Cancel</button>
 			</div>
 
@@ -62,8 +64,35 @@
 			var id = $("#id").val();
 			var name = $("#name").val();
 			var age = $("#age").val();
-			
-			//alert(name + "," + age + "," + id);
+
+			if (name == null || name != null && name.trim() == '') {
+				$("#name").focus();
+				alert('Enter your full name');
+				return;
+			}
+
+			if (age == null || age != null && age.trim() == '') {
+				$("#age").focus();
+				alert('Enter your age');
+				return;
+			}
+
+			$.ajax({
+				method : "POST",
+				url : "save",
+				data : JSON.stringify({
+					id : id,
+					name : name,
+					age : age
+				}),
+				contentType : "application/json; charset=utf-8",
+				success : function(response) {
+					$("#id").val(response.id);
+					alert("New record has been successfully saved!");
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert("Error saving new user: " + xhr.responseText);
+			});
 		}
 	</script>
 </body>
