@@ -10,6 +10,15 @@
 	crossorigin="anonymous">
 
 <title>User Control</title>
+
+<style type="text/css">
+html {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 5%;
+}
+</style>
+
 </head>
 <body>
 	<!-- Option 1: Bootstrap Bundle with Popper -->
@@ -22,9 +31,11 @@
 		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
 		crossorigin="anonymous"></script>
 
+
+	<h3 align="center">Spring Boot REST API CRUD Completo Jdev Treinamento</h3></br>
+
 	<div class="mb-3" style="max-width: 95%;">
 
-		<h3>Spring Boot REST API CRUD Completo Jdev Treinamento</h3>
 
 		<form action="" id="formCreateUser">
 			<div class="row mb-3">
@@ -49,14 +60,55 @@
 			</div>
 
 			<div align="center">
-				<button type="button" class="btn btn-primary btn-lg"
-					onclick="saveUser()">Sign up</button>
-				<button type="button" class="btn btn-warning btn-lg"
-					onclick="document.getElementById('formCreateUser').reset();">Clear</button>
-				<button type="button" class="btn btn-secondary btn-lg">Cancel</button>
+				<button type="button" class="btn btn-primary btn-lg" onclick="saveUser()">Save</button>
+				<button type="button" class="btn btn-warning btn-lg" onclick="document.getElementById('formCreateUser').reset();">Clear</button>
+				<button type="button" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#modalPesquisarUser">Search</button>
+				<button type="button" class="btn btn-danger btn-lg" onclick="buttonDeletefromScreen()">Delete</button>
 			</div>
 
 		</form>
+	</div>
+
+	<div class="modal fade" id="modalPesquisarUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Search users</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				
+					<form>
+						<div class="mb-3">
+							<label for="recipient-name" class="col-form-label">Enter
+								a name</label> <input type="text" class="form-control" id="searchName">
+						</div>
+						<button type="button" class="btn btn-success" onclick="searchUser()">Search</button>
+					</form>
+					
+					<div style="height: 300px;overflow: scroll;">
+						<table class="table" id="tableResult">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Name</th>
+									<th scope="col">Edit</th>
+									<th scope="col">Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script type="text/javascript">
@@ -93,6 +145,99 @@
 			}).fail(function(xhr, status, errorThrown) {
 				alert("Error saving new user: " + xhr.responseText);
 			});
+		}
+		
+		function buttonDeletefromScreen() {
+			var id = $('#id').val();
+
+			if (id != null && id.trim() != '') {
+				deleteUser(id);
+				document.getElementById('formCreateUser').reset();
+			}
+
+		}
+
+		function deleteUser(id) {
+
+			if (confirm('Deseja realmente deletar?')) {
+				$.ajax({
+					method : "DELETE",
+					url : "delete",
+					data : "iduser=" + id,
+					success : function(response) {
+
+						$("#" + id).remove();
+
+						alert(response);
+
+					}
+				}).fail(function(xhr, status, errorThrown) {
+					alert("Error when delete user by ID: " + xhr.responseText);
+				});
+			}
+		}
+
+		function editUser(id) {
+
+			$.ajax({
+				method : "GET",
+				url : "findbyid",
+				data : "iduser=" + id,
+				success : function(response) {
+
+					$("#id").val(response.id);
+					$("#name").val(response.name);
+					$("#age").val(response.age);
+
+					$('#modalPesquisarUser').modal('hide');
+				}
+			}).fail(
+					function(xhr, status, errorThrown) {
+						alert("Error when searching for user by ID: "
+								+ xhr.responseText);
+					});
+		}
+
+		function searchUser() {
+			var name = $("#searchName").val();
+
+			if (name != null && name.trim() != '') {
+
+				$
+						.ajax(
+								{
+									method : "GET",
+									url : "findbyname",
+									data : "name=" + name,
+									success : function(response) {
+
+										$('#tableResult > tbody > tr').remove();
+
+										for (var i = 0; i < response.length; i++) {
+
+											$('#tableResult > tbody')
+													.append(
+															'<tr id="' + response[i].id + '"><td>'
+																	+ response[i].id
+																	+ '</td>'
+																	+ '<td>'
+																	+ response[i].name
+																	+ '</td>'
+																	+ '<td><button type="button" class="btn btn-primary" onclick="editUser('
+																	+ response[i].id
+																	+ ')">Ver</button></td>'
+																	+ '<td><button type="button" class="btn btn-danger" onclick="deleteUser('
+																	+ response[i].id
+																	+ ')">Delete</button></td>'
+																	+ '</tr>');
+										}
+									}
+								}).fail(
+								function(xhr, status, errorThrown) {
+									alert("Error when searching user: "
+											+ xhr.responseText);
+								});
+			}
 		}
 	</script>
 </body>
